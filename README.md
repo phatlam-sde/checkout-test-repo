@@ -32,5 +32,18 @@ tests, or a failing baseline produce an inconclusive failure.
 For the demo, branch from `main`, change `>= 50` to `> 50` in `shipping.py`,
 and open a PR into `main`. A correct generated boundary test should detect that
 an order of $60 incorrectly totals $55 instead of $50. Restore `>= 50` on the
-PR branch to demonstrate a passing check. Live GitHub execution still needs
-verification.
+PR branch to demonstrate a passing check.
+
+## Verified live demo
+
+[Draft PR #1](https://github.com/phatlam-sde/checkout-test-repo/pull/1) exercised
+real Gemini generation through GitHub Actions:
+
+- [Regression run](https://github.com/phatlam-sde/checkout-test-repo/actions/runs/43681533429):
+  six tests passed on base; two failed on the buggy head ($50 and $60 orders).
+  ProofPatch reported `regression` and the check failed as intended.
+- [Fixed run](https://github.com/phatlam-sde/checkout-test-repo/actions/runs/43681669637):
+  six tests passed on both commits. ProofPatch reported `no_regression_observed`.
+
+Both runs uploaded candidate tests and evidence. These results demonstrate this
+checkout example; they do not verify arbitrary repositories or future generated tests.
