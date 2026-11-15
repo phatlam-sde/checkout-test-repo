@@ -12,17 +12,25 @@ The `main` branch contains the correct inclusive shipping threshold. The
 
 ## Automatic ProofPatch check
 
-`.github/workflows/proofpatch.yml` calls the reusable workflow in
-`phatlam-sde/ProofPatch`, pinned to commit
-`561f89688166e5a169ed68285ef96df439125d7c`.
+The caller in `.github/workflows/proofpatch.yml` starts ProofPatch when a
+same-repository pull request opens or updates. Keep `proofpatch-requirements.md`
+on the base branch: its committed rules, both code versions, and their diff are
+sent to Gemini to generate candidate checkout tests. The same tests run against
+both commits in Docker. Requirement changes in a PR are flagged for review; the
+base revision remains authoritative for that run.
 
-Opening or updating a pull request from a branch in this repository starts
-ProofPatch on GitHub Actions. It compares the PR's base and head commits using
-the same handwritten checkout test in Docker and writes the verdict to the
-job summary. This version needs no Gemini API key and does not generate tests.
+Add your own `GEMINI_API_KEY` under GitHub Settings → Secrets and variables →
+Actions → New repository secret. Never commit the key. No key is needed in the
+checkout code or requirements file.
 
-For the next demo, create a branch from `main`, change `>= 50` to `> 50` in
-`shipping.py`, and open a PR back into `main`. The expected result is a failing
-check because a $60 order incorrectly totals $55 instead of $50. Restore
-`>= 50` on that PR branch to obtain a passing check. Execution problems are
-reported as inconclusive failures. Live GitHub execution still needs verification.
+Open the run under Actions to see the job summary and download its ProofPatch
+artifact (retained 14 days). It includes available requirements, commit IDs,
+diff, generated tests, rationale, and results. Generated tests are candidates,
+not automatically verified tests. Missing credentials, quota errors, invalid
+tests, or a failing baseline produce an inconclusive failure.
+
+For the demo, branch from `main`, change `>= 50` to `> 50` in `shipping.py`,
+and open a PR into `main`. A correct generated boundary test should detect that
+an order of $60 incorrectly totals $55 instead of $50. Restore `>= 50` on the
+PR branch to demonstrate a passing check. Live GitHub execution still needs
+verification.

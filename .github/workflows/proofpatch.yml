@@ -9,4 +9,6 @@ permissions:
 
 jobs:
   checkout-regression:
-    uses: phatlam-sde/ProofPatch/.github/workflows/checkout-regression.yml@561f89688166e5a169ed68285ef96df439125d7c
+    uses: phatlam-sde/ProofPatch/.github/workflows/checkout-regression.yml@37b9a2d125dec1a02217d994c22a20793a68ba01
+    secrets:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
